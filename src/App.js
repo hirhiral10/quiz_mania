@@ -1,23 +1,33 @@
-import logo from './logo.svg';
-import './App.css';
+import logo from "./logo.svg";
+import "./App.css";
+import { Header } from "./component/header";
+import { Entry } from "./component/entry";
+import { useState } from "react";
+import { Quiz } from "./component/quiz";
 
 function App() {
+  const [user, setUser] = useState();
+  const [error, setError] = useState();
+
+  const onSubmit = (data) => {
+    const { user, language } = data;
+    setError();
+    if (!user) {
+      setError((data)=>({ ...data, user: "User Required" }));
+    }
+    if (!language) {
+      setError((data) => ({ ...data, language: "Please Select one option" }));
+    }
+    if (!user || !language) {
+      return;
+    }
+    setUser(data);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="App bg-orange-50 h-screen">
+      <Header />
+      {user ? <Quiz data={user}/> : <Entry onSubmit={onSubmit} error={error} />}
     </div>
   );
 }
